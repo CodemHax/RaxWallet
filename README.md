@@ -38,11 +38,21 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
   - Request/Response models
   - Database connection management
 
+- [x] **User Profile Management**
+  - User profile endpoint (`/users/me`)
+  - Current user retrieval functionality
+  - Protected user routes with JWT validation
+
+- [x] **Wallet Infrastructure**
+  - Wallet ID generation utility (WalletEx)
+  - Random wallet ID creation with customizable length
+  - Alphanumeric wallet identifier system
+
 ### 🚧 In Progress
 
-- [ ] **Bug Fixes**
+- [x] **Bug Fixes**
   - [x] Fixed rate limiter exception handler (AttributeError resolved)
-  - [ ] Additional error handling improvements
+  - [x] Additional error handling improvements
 
 ### 📝 Planned Features
 
@@ -171,6 +181,6 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
 
 ---
 
-**Last Updated**: August 26, 2025  
-**Version**: 0.1.0  
+**Last Updated**: August 26, 2025
+**Version**: 0.1.0
 **Status**: In Active Development
