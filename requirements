@@ -1,0 +1,9 @@
+motor
+python-dotenv
+passlib
+python-jose
+slowapi
+pydantic[email]
+pytest
+httpx
+pytest-asyncio

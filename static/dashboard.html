@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - SyWallet</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    .dash-wrapper{padding-top:110px;padding-bottom:60px;}
+    .empty-hint{padding:2rem;text-align:center;color:#64748b;font-size:.9rem;border:1px dashed #cbd5e1;border-radius:12px;background:#f8fafc}
+    .transactions-scroll{max-height:340px;overflow:auto;padding-right:4px}
+    .transactions-scroll::-webkit-scrollbar{width:6px}
+    .transactions-scroll::-webkit-scrollbar-track{background:transparent}
+    .transactions-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <div class="nav-brand"><i class="fas fa-wallet"></i><span>SyWallet</span></div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/features" class="nav-link">Features</a>
+      <a href="/dashboard" class="nav-link dashboard-link active">Dashboard</a>
+      <a href="/profile" class="nav-link profile-link" style="display:none;">Profile</a>
+      <div class="auth-buttons" id="auth-buttons" style="display:none;">
+        <a class="btn btn-outline" href="login.html">Login</a>
+        <a class="btn btn-primary" href="register.html">Sign Up</a>
+      </div>
+      <div class="user-menu" id="user-menu" style="display:none;">
+        <span class="user-name" id="user-name"></span>
+        <button class="btn btn-outline" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<main class="dash-wrapper container">
+  <div class="dashboard-header" style="text-align:left;margin-bottom:2.5rem;">
+    <h2 style="margin:0;font-size:2.2rem;">Welcome, <span id="dashboard-user-name"></span></h2>
+    <p style="color:#64748b;margin-top:.35rem;">Your wallet overview</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="dashboard-card balance-card">
+      <div class="card-header">
+        <h3>Current Balance</h3>
+        <i class="fas fa-wallet"></i>
+      </div>
+      <div class="balance-display">
+        <span class="currency">$</span>
+        <span class="amount" id="wallet-balance">0.00</span>
+      </div>
+      <div class="balance-actions">
+        <button class="btn btn-small btn-primary" id="btnAddFunds">Add Money</button>
+        <button class="btn btn-small btn-outline" id="btnWithdraw">Withdraw</button>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3>Quick Actions</h3>
+        <i class="fas fa-bolt"></i>
+      </div>
+      <div class="quick-actions">
+        <button class="action-btn" id="qaAddFunds">
+          <i class="fas fa-plus"></i><span>Add Funds</span>
+        </button>
+        <button class="action-btn" id="qaSendMoney">
+          <i class="fas fa-paper-plane"></i><span>Send Money</span>
+        </button>
+        <button class="action-btn" id="qaRefreshTx">
+          <i class="fas fa-history"></i><span>Refresh Tx</span>
+        </button>
+        <button class="action-btn" id="qaWithdraw">
+          <i class="fas fa-arrow-down"></i><span>Withdraw</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="dashboard-card transactions-card">
+      <div class="card-header">
+        <h3>Recent Transactions</h3>
+        <i class="fas fa-list"></i>
+      </div>
+      <div class="transactions-list transactions-scroll" id="tx-list">
+        <div class="empty-hint" id="tx-empty">No transactions yet.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="modal" id="modalAddFunds">
+  <div class="modal-content">
+    <span class="close" data-close="modalAddFunds">&times;</span>
+    <div class="modal-header">
+      <h2>Add Funds</h2>
+      <p>Increase your wallet balance.</p>
+    </div>
+    <form id="formAddFunds" class="auth-form">
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" step="0.01" min="0.01" name="amount" required />
+      </div>
+      <button class="btn btn-primary btn-full" type="submit">Add</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="modalWithdraw">
+  <div class="modal-content">
+    <span class="close" data-close="modalWithdraw">&times;</span>
+    <div class="modal-header">
+      <h2>Withdraw Funds</h2>
+      <p>Reduce your wallet balance.</p>
+    </div>
+    <form id="formWithdraw" class="auth-form">
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" step="0.01" min="0.01" name="amount" required />
+      </div>
+      <button class="btn btn-primary btn-full" type="submit">Withdraw</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="modalSendMoney">
+  <div class="modal-content">
+    <span class="close" data-close="modalSendMoney">&times;</span>
+    <div class="modal-header">
+      <h2>Send Money</h2>
+      <p>Transfer funds to another wallet.</p>
+    </div>
+    <form id="formSendMoney" class="auth-form">
+      <div class="form-group">
+        <label>Recipient Wallet ID</label>
+        <input type="text" name="wallet_id" required />
+      </div>
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" step="0.01" min="0.01" name="amount" required />
+      </div>
+      <button class="btn btn-primary btn-full" type="submit">Send</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="loading" id="loading" style="display:none;"><div class="spinner"></div></div>
+<script src="/static/script.js"></script>
+</body>
+</html>

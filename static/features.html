@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Features - SyWallet</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    .feature-hero{padding:140px 0 60px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center}
+    .feature-hero h1{font-size:3rem;margin-bottom:16px}
+    .feature-hero p{max-width:760px;margin:0 auto;font-size:1.1rem;opacity:.9}
+    .alt-band{background:#0f172a;color:#fff;padding:60px 0;margin-top:80px}
+    .alt-band h2{font-size:2.2rem;margin-bottom:20px;text-align:center}
+    .cta-box{margin-top:50px;text-align:center}
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <div class="nav-brand"><i class="fas fa-wallet"></i><span>SyWallet</span></div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/features" class="nav-link active">Features</a>
+      <a href="/dashboard" class="nav-link dashboard-link" style="display:none;">Dashboard</a>
+      <a href="/profile" class="nav-link profile-link" style="display:none;">Profile</a>
+      <div class="auth-buttons" id="auth-buttons">
+        <a class="btn btn-outline" href="/login">Login</a>
+        <a class="btn btn-primary" href="/register">Sign Up</a>
+      </div>
+      <div class="user-menu" id="user-menu" style="display:none;">
+        <span class="user-name" id="user-name"></span>
+        <button class="btn btn-outline" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<section class="feature-hero">
+  <div class="container">
+    <h1>Powerful Features</h1>
+    <p>Everything you need to manage digital funds securely, intelligently, and effortlessly.</p>
+  </div>
+</section>
+
+<section class="features" style="padding-top:40px;">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-lock"></i></div>
+        <h3>Advanced Encryption</h3>
+        <p>All sensitive operations use robust hashing and JWT-based secure sessions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
+        <h3>Real-Time Balance</h3>
+        <p>Dashboard auto-refresh keeps your displayed balance always up to date.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-user-shield"></i></div>
+        <h3>Rate Limiting</h3>
+        <p>Built-in throttling protects against brute force and abuse scenarios.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-cloud"></i></div>
+        <h3>API First</h3>
+        <p>Clean FastAPI backend lets you integrate mobile or external services fast.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+        <h3>Insights Ready</h3>
+        <p>Extendable design prepared for analytics & categorization modules.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-plug"></i></div>
+        <h3>Modular Codebase</h3>
+        <p>Clearly separated routes, models, utilities, and static UI assets.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt-band">
+  <div class="container">
+    <h2>Built For Developers & End Users</h2>
+    <p style="max-width:760px;margin:0 auto;opacity:.85;line-height:1.6;">SyWallet blends a production-capable FastAPI backend with a clean front-end architecture. Extend endpoints, plug in databases, or integrate third-party payment rails without rewriting the foundation.</p>
+    <div class="cta-box">
+      <a href="/register" class="btn btn-primary btn-large">Create Your Wallet</a>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+<div class="loading" id="loading" style="display:none;"><div class="spinner"></div></div>
+<script src="/static/script.js"></script>
+</body>
+</html>
