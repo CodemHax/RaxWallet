@@ -1,0 +1,39 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+.env.*
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# OS/filesystem
+.DS_Store
+Thumbs.db
+
+# Tooling
+.idea/
+.vscode/
+
+# Byte-compiled / C extensions
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# Coverage / test
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Local data
+*.sqlite3
+
