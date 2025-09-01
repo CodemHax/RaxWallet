@@ -240,5 +240,5 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, Q
 ---
 
 **Last Updated**: September 1, 2025
-**Version**: 0..60
+**Version**: 0.6.0
 **Status**: In Active Devlopment
