@@ -6,8 +6,8 @@ from fastapi.responses import FileResponse
 from api.auth import router as auth_router
 from api.users import user_router
 from api.wallet import wallet_router
+from api.payments import pay_router
 from core.database.db import initDB, get_client
-from core.database.user_db import crt_index
 from contextlib import asynccontextmanager
 from slowapi.errors import RateLimitExceeded
 from slowapi import _rate_limit_exceeded_handler
@@ -16,7 +16,6 @@ from utlis.limiter import limiter
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await initDB()
-    await crt_index()
     yield
     client = get_client()
     if client is not None:
@@ -37,6 +36,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(wallet_router)
+app.include_router(pay_router)
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -65,6 +65,14 @@ async def dashboard_page():
 async def profile_page():
     return FileResponse("static/profile.html")
 
+@app.get("/payment-confirmation")
+async def payment_confirmation_page():
+    return FileResponse("static/payment-confirmation.html")
 
-if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=3000)
+@app.get("/qr-payment-generator")
+async def qr_payment_generator_page():
+    return FileResponse("static/qr-payment-generator.html")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

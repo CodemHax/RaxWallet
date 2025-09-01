@@ -1,67 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - SyWallet</title>
-  <link rel="stylesheet" href="/static/styles.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    .auth-wrapper{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 20px 40px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);}
-    .auth-card{width:100%;max-width:420px;background:#fff;border-radius:20px;padding:40px 38px;box-shadow:0 20px 50px -15px rgba(0,0,0,.25);position:relative;}
-    .auth-card h1{font-size:2rem;margin-bottom:10px;color:#1e293b;font-weight:700}
-    .auth-desc{color:#64748b;margin-bottom:28px;font-size:.95rem}
-    .brand-mini{position:absolute;top:-28px;left:20px;background:#fff;padding:8px 18px;border-radius:30px;box-shadow:0 4px 15px rgba(0,0,0,.12);display:flex;align-items:center;gap:8px;font-weight:600;color:#667eea}
-    .alt-link{margin-top:18px;font-size:.9rem;text-align:center;color:#64748b}
-    .alt-link a{color:#667eea;text-decoration:none;font-weight:500}
-    .alt-link a:hover{text-decoration:underline}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - RaxWallet</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar" id="navbar">
-  <div class="nav-container">
-    <div class="nav-brand"><i class="fas fa-wallet"></i><span>SyWallet</span></div>
-    <div class="nav-menu" id="nav-menu">
-      <a href="/" class="nav-link">Home</a>
-      <a href="/features" class="nav-link">Features</a>
-      <a href="/dashboard" class="nav-link dashboard-link" style="display:none;">Dashboard</a>
-      <a href="/profile" class="nav-link profile-link" style="display:none;">Profile</a>
-      <div class="auth-buttons" id="auth-buttons" style="display:none;">
-        <a class="btn btn-outline" href="/login">Login</a>
-        <a class="btn btn-primary" href="/register">Sign Up</a>
-      </div>
-      <div class="user-menu" id="user-menu" style="display:none;">
-        <span class="user-name" id="user-name"></span>
-        <button class="btn btn-outline" id="logoutBtn">Logout</button>
-      </div>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                RaxWallet
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/features" class="nav-link">Features</a>
+                <a href="/dashboard" class="nav-link dashboard-link">Dashboard</a>
+                <a href="/profile" class="nav-link profile-link">Profile</a>
+            </div>
+            <div class="nav-buttons">
+                <div class="auth-buttons" id="auth-buttons">
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="user-menu" id="user-menu">
+                    <span class="user-name" id="user-name">User</span>
+                    <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h1>Welcome Back</h1>
+                    <p>Sign in to your RaxWallet account</p>
+                </div>
+
+                <form id="loginForm" class="auth-form" novalidate>
+                    <div class="form-group">
+                        <label for="username">
+                            <i class="fas fa-user"></i>
+                            Username
+                        </label>
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                                minlength="3"
+                                maxlength="50"
+                            >
+                            <div class="input-feedback" id="username-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Password
+                        </label>
+                        <div class="input-group">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                minlength="8"
+                            >
+                            <button type="button" class="password-toggle" id="password-toggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <div class="input-feedback" id="password-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember-me" name="remember">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full" id="login-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <div class="social-login">
+                    <button type="button" class="btn btn-social btn-google">
+                        <i class="fab fa-google"></i>
+                        Continue with Google
+                    </button>
+                </div>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="/register" class="register-link">Sign up here</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
     </div>
-    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-  </div>
-</nav>
 
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <div class="brand-mini"><i class="fas fa-wallet"></i> SyWallet</div>
-    <h1>Welcome back</h1>
-    <p class="auth-desc">Sign in to access your secure digital wallet dashboard.</p>
-    <form id="loginForm">
-      <div class="form-group">
-        <label for="loginUsername">Username</label>
-        <input id="loginUsername" name="username" type="text" required autocomplete="username" />
-      </div>
-      <div class="form-group">
-        <label for="loginPassword">Password</label>
-        <input id="loginPassword" name="password" type="password" required autocomplete="current-password" />
-      </div>
-      <button class="btn btn-primary btn-full" type="submit">Sign In</button>
-      <div class="alt-link">No account? <a href="/register">Create one</a></div>
-    </form>
-  </div>
-</div>
+    <div class="toast" id="toast"></div>
 
-<div class="toast" id="toast"></div>
-<div class="loading" id="loading" style="display:none;"><div class="spinner"></div></div>
-<script src="/static/script.js"></script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

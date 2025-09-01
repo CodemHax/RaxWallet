@@ -1,6 +1,6 @@
-# SyWallet - Digital Wallet API
+# RaxWallet - Digital Wallet API
 
-A FastAPI-based digital wallet system with user authentication, rate limiting, and MongoDB integration.
+A FastAPI-based digital wallet system with user authentication, rate limiting, QR payments, and MongoDB integration.
 
 ## 📋 Development Task List & Progress
 
@@ -23,6 +23,8 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
 - [x] **Database Layer**
   - MongoDB async connection setup
   - User database operations (CRUD)
+  - Transaction database operations
+  - Payment request database operations
   - Database indexing for users
   - Connection lifecycle management
 
@@ -49,7 +51,7 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
   - Alphanumeric wallet identifier system
 
 #### **August 27, 2025**
-- [x] **Wallet Operations (Phase 1)**
+- [x] **Wallet Operations (Complete)**
   - [x] Wallet balance endpoint (`/wallet/balance`)
   - [x] Add funds endpoint (`/wallet/add_funds/{amount}`)
   - [x] Withdraw funds endpoint (`/wallet/withdraw_funds/{amount}`)
@@ -57,51 +59,54 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
   - [x] Transaction history endpoint (`/wallet/transactions`)
   - [x] Wallet profile summary endpoint (`/wallet/profile`)
   - [x] Transaction recording (credit/debit with running balance)
-  - [x] Basic balance validation & error handling
+  - [x] Balance validation & error handling
 
-### 🚧 In Progress
+#### **September 1, 2025**
+- [x] **Payment System & QR Payments**
+  - [x] QR payment request creation (`/payments/create_qr_request`)
+  - [x] QR code generation endpoint (`/payments/qr_code/{request_id}`)
+  - [x] QR payment scanning handling (`/payments/scan`)
+  - [x] Payment confirmation data retrieval
+  - [x] Payment processing with transaction validation
+  - [x] Expirable payment requests with UUID generation
 
-- [x] **Bug Fixes**
-  - [x] Fixed rate limiter exception handler (AttributeError resolved)
-  - [x] Additional error handling improvements
-
+-
 ### 📝 Planned Features
 
 #### **Next Sprint**
-- [ ] **Wallet Operations (Phase 2)**
-  - [ ] Multi-currency balances
-  - [ ] Transaction pagination & filtering
-  - [ ] Wallet creation endpoint (separate from user creation, if needed for multi-wallet support)
-
 - [ ] **Transaction System Enhancements**
-  - [ ] Transaction validation rules (limits, duplicate prevention)
+  - [ ] Transaction pagination & filtering
   - [ ] Transaction fees calculation
-  - [ ] Scheduled / recurring transfers
+  - [ ] Transaction limits and controls
+  - [ ] Duplicate transaction prevention
 
-- [ ] **User Management**
+- [ ] **User Management Enhancements**
   - [ ] Password reset functionality
   - [ ] Email verification
   - [ ] Account status management
 
+- [ ] **Payment System Enhancements**
+  - [ ] Payment notifications
+  - [ ] Scheduled / recurring payments
+  - [ ] Multi-currency support
+
 #### **Future Enhancements**
 - [ ] **Advanced Features**
-  - [ ] Transaction notifications
-  - [ ] QR code generation for payments
-  - [ ] Transaction limits and controls
-  - [ ] Admin dashboard
-  - [ ] Analytics and reporting
+  - [ ] Admin dashboard with analytics
+  - [ ] Bulk operations support
+  - [ ] Advanced reporting and analytics
 
 - [ ] **Security Improvements**
   - [ ] Two-factor authentication (2FA)
-  - [ ] Device management
+  - [ ] Device management and tracking
   - [ ] Session management
-  - [ ] Fraud detection
+  - [ ] Fraud detection algorithms
 
 - [ ] **API Enhancements**
-  - [ ] API documentation with OpenAPI
-  - [ ] Webhook support
-  - [ ] Bulk operations
-  - [ ] Advanced filtering and pagination
+  - [ ] Comprehensive API documentation with OpenAPI
+  - [ ] Webhook support for external integrations
+  - [ ] Rate limiting per user/account
+  - [ ] Advanced filtering and search capabilities
 
 ## 🛠️ Technology Stack
 
@@ -112,13 +117,15 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
 - **Rate Limiting**: SlowAPI
 - **Validation**: Pydantic with email validation
 - **Environment**: python-dotenv
+- **QR Codes**: python-qrcode library
+
 
 ## 📦 Installation & Setup
 
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd SyWallet
+   cd RaxWallet
    ```
 
 2. **Create virtual environment**
@@ -138,7 +145,7 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
    Create a `.env` file with:
    ```env
    MONGO_URL=mongodb://localhost:27017
-   MONGO_DBNAME=sywallet
+   MONGO_DBNAME=raxwallet
    API_SECRET_KEY=your-secret-key-here
    ```
 
@@ -153,7 +160,10 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
 - `POST /auth/register` - Register new user
 - `POST /auth/login` - User login
 
-### Wallet
+### User Management
+- `GET /users/me` - Get current user profile
+
+### Wallet Operations
 - `GET /wallet/balance` - Get current wallet balance
 - `POST /wallet/add_funds/{amount}` - Credit funds to wallet
 - `POST /wallet/withdraw_funds/{amount}` - Withdraw funds from wallet
@@ -161,12 +171,33 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
 - `GET /wallet/transactions` - List wallet transaction history
 - `GET /wallet/profile` - Get wallet + user profile summary
 
+### Payment System
+- `POST /payments/create_qr_request` - Create QR payment request
+- `GET /payments/qr_code/{request_id}` - Generate QR code for payment
+- `GET /payments/scan` - Handle QR code scanning
+- `GET /payments/confirmation_data/{request_id}` - Get payment confirmation data
+
 ### Rate Limits
 - Authentication endpoints: 5 requests per minute per IP
 - Wallet balance/transactions: 10 requests per minute per IP
 - Mutating wallet operations (add, withdraw, send): 5 requests per minute per IP
 
 ## 📊 Daily Development Log
+
+### September 1, 2025
+**Current Status:**
+- Complete wallet operations system implemented
+- QR payment system with expirable requests
+- Frontend interface for wallet management
+- Transaction history and profile management
+- Rate limiting and security measures in place
+
+**System Features:**
+- Full CRUD operations for wallets
+- QR code generation for payments
+- Real-time balance updates
+- Transaction logging with running balances
+- Secure JWT authentication
 
 ### August 27, 2025
 **Implemented:**
@@ -176,42 +207,38 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, a
 - Basic validation (amount > 0, sufficient funds)
 - Rate limiting applied to wallet routes
 
-**Next Day Goals:**
-- Add pagination for transaction history
-- Begin multi-currency design
-- Draft transaction fee model
-
 ### August 26, 2025
 **Implemented:**
 - Fixed critical bug in rate limiter exception handler
 - Resolved AttributeError by moving limiter to `app.state.limiter`
 - Improved error handling for rate limit exceeded scenarios
 
-**Next Day Goals:**
-- Implement wallet creation functionality
-- Add balance check endpoint
-- Create transaction models
-
 ---
 
 ## 📝 Development Notes
 
-### Current Issues
-- None currently blocking development
+### Current System Capabilities
+- Complete digital wallet functionality
+- QR-based payment system
+- Transaction history tracking
+- User authentication and authorization
+- Rate limiting for API protection
 
 ### Performance Considerations
 - MongoDB indexes created for efficient user lookups
 - Async operations throughout the application
 - Connection pooling with Motor driver
+- Optimized transaction processing
 
 ### Security Notes
 - All passwords are hashed using bcrypt
 - JWT tokens for stateless authentication
 - Rate limiting prevents abuse
 - Input validation on all endpoints
+- Secure QR payment request handling
 
 ---
 
-**Last Updated**: August 27, 2025
-**Version**: 0.1.1
-**Status**: In Active Development
+**Last Updated**: September 1, 2025
+**Version**: 1.0.0
+**Status**: Production Ready API

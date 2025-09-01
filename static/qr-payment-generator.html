@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Payment QR Code - RaxWallet</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                RaxWallet
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/features" class="nav-link">Features</a>
+                <a href="/dashboard" class="nav-link dashboard-link">Dashboard</a>
+                <a href="/profile" class="nav-link profile-link">Profile</a>
+            </div>
+            <div class="nav-buttons">
+                <div class="auth-buttons" id="auth-buttons">
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="user-menu" id="user-menu">
+                    <span class="user-name" id="user-name">User</span>
+                    <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="payment-wrapper">
+            <div class="payment-container">
+                <div class="back-button">
+                    <a href="/dashboard" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+
+                <div class="payment-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-qrcode"></i> Generate Payment QR Code</h2>
+                        <p>Create a QR code for others to pay you</p>
+                    </div>
+
+                    <form id="qrForm" class="qr-form">
+                        <div class="form-group">
+                            <label for="amount">Amount ($)</label>
+                            <input type="number" id="amount" name="amount" step="0.01" min="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description (Optional)</label>
+                            <textarea id="description" name="description" rows="3" placeholder="What is this payment for?"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expires_in_minutes">Expires In</label>
+                            <select id="expires_in_minutes" name="expires_in_minutes">
+                                <option value="15">15 Minutes</option>
+                                <option value="30">30 Minutes</option>
+                                <option value="60" selected>1 Hour</option>
+                                <option value="120">2 Hours</option>
+                                <option value="1440">24 Hours</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-qrcode"></i> Generate QR Code
+                        </button>
+                    </form>
+
+                    <div id="qrResult" class="qr-result" style="display: none;">
+                        <div class="qr-display">
+                            <img id="qrCodeImage" src="" alt="QR Code">
+                        </div>
+
+                        <div class="payment-status-section">
+                            <div class="status-indicator">
+                                <div class="status-dot pending" id="statusDot"></div>
+                                <div class="status-text pending" id="statusText">Pending</div>
+                            </div>
+                            <div class="status-details pending" id="statusDetails">
+                                <p>Waiting for payment...</p>
+                                <div class="status-timestamp">Just now</div>
+                            </div>
+                        </div>
+
+                        <div class="qr-info">
+                            <p><strong>Amount:</strong> $<span id="displayAmount"></span></p>
+                            <p><strong>Description:</strong> <span id="displayDescription"></span></p>
+                            <p><strong>Expires:</strong> <span id="displayExpiry"></span></p>
+                            <p><strong>Request ID:</strong> <span id="displayRequestId"></span></p>
+                        </div>
+                        <div class="qr-actions">
+                            <button id="downloadQR" class="btn btn-outline">
+                                <i class="fas fa-download"></i> Download QR
+                            </button>
+                            <button id="shareQR" class="btn btn-outline">
+                                <i class="fas fa-share"></i> Share Link
+                            </button>
+                            <button id="generateNew" class="btn btn-secondary">
+                                <i class="fas fa-plus"></i> Generate New
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

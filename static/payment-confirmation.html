@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation - RaxWallet</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                RaxWallet
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/features" class="nav-link">Features</a>
+                <a href="/dashboard" class="nav-link dashboard-link">Dashboard</a>
+                <a href="/profile" class="nav-link profile-link">Profile</a>
+            </div>
+            <div class="nav-buttons">
+                <div class="auth-buttons" id="auth-buttons">
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="user-menu" id="user-menu">
+                    <span class="user-name" id="user-name">User</span>
+                    <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="payment-wrapper">
+            <div class="payment-container">
+                <div class="back-button">
+                    <a href="/dashboard" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+
+                <div id="loadingState" class="payment-card loading-card">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>Loading Payment Details...</h3>
+                    <p>Please wait while we fetch the payment information.</p>
+                </div>
+
+                <div id="confirmationCard" class="payment-card" style="display: none;">
+                    <div class="card-header">
+                        <h2><i class="fas fa-credit-card"></i> Payment Confirmation</h2>
+                        <p>Review the payment details and choose your action</p>
+                    </div>
+
+                    <div class="payment-details-section">
+                        <div class="payment-summary">
+                            <h3>Payment Details</h3>
+
+                            <div class="detail-group">
+                                <div class="detail-row">
+                                    <span class="label">To:</span>
+                                    <span class="value" id="receiverName">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Amount:</span>
+                                    <span class="value amount" id="paymentAmount">$0.00</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Description:</span>
+                                    <span class="value" id="paymentDescription">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Transaction ID:</span>
+                                    <span class="value" id="transactionId">-</span>
+                                </div>
+                            </div>
+
+                            <div class="balance-info">
+                                <div class="current-balance">
+                                    <span class="label">Your Current Balance:</span>
+                                    <span class="value" id="currentBalance">$0.00</span>
+                                </div>
+                                <div class="after-payment">
+                                    <span class="label">Balance After Payment:</span>
+                                    <span class="value" id="balanceAfter">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="acceptBtn" class="btn btn-success btn-large">
+                                <i class="fas fa-check"></i> Accept Payment
+                            </button>
+                            <button id="rejectBtn" class="btn btn-danger btn-large">
+                                <i class="fas fa-times"></i> Reject Payment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="successCard" class="payment-card success-card" style="display: none;">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Payment Processed!</h3>
+                    <p id="successMessage">Your payment has been processed successfully.</p>
+                    <div class="success-actions">
+                        <a href="/dashboard" class="btn btn-primary">Back to Dashboard</a>
+                        <button id="viewReceiptBtn" class="btn btn-outline">View Receipt</button>
+                    </div>
+                </div>
+
+                <div id="errorCard" class="payment-card error-card" style="display: none;">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3>Payment Failed</h3>
+                    <p id="errorMessage">There was an error processing your payment.</p>
+                    <div class="error-actions">
+                        <button id="retryBtn" class="btn btn-primary">Try Again</button>
+                        <a href="/dashboard" class="btn btn-outline">Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/script.js"></script>
+    <script src="/static/payment-confirmation.js"></script>
+</body>
+</html>

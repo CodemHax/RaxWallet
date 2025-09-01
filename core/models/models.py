@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, constr, validator, Field
+from pydantic import BaseModel, constr, Field
 
 
 class Token(BaseModel):
@@ -30,7 +30,70 @@ class RegisterManager(BaseModel):
     full_name: constr(min_length=5,max_length=30)
 
 
-class JWTtoken(BaseModel):
+class JWToken(BaseModel):
     access_token: str
     token_type: str
     expires_in: int
+
+
+class PaymentRequest(BaseModel):
+    to_wallet_id: str
+    amount: float
+
+class PaymentResponse(BaseModel):
+    transaction_id: str
+
+class PaymentApprovalRequest(BaseModel):
+    amount: float
+    recipient_wallet_id: str
+    message: str = ""
+
+class QRCodeRequest(BaseModel):
+    amount: float
+    description: str = ""
+    expires_in_minutes: int = 60
+
+class QRCodeResponse(BaseModel):
+    request_id: str
+    qr_url: str
+    payment_url: str
+    expires_at: str
+
+class QRPaymentRequest(BaseModel):
+    amount: float
+    description: str = ""
+    expires_in_minutes: int = 60
+
+class QRPaymentResponse(BaseModel):
+    request_id: str
+    qr_code_url: str
+    amount: float
+    receiver_name: str
+    expires_at: str
+
+class PaymentConfirmationData(BaseModel):
+    request_id: str
+    receiver_name: str
+    receiver_wallet_id: str
+    amount: float
+    description: str
+    transaction_id: str
+
+class PaymentAction(BaseModel):
+    request_id: str
+    action: str
+
+class PaymentRequestDetails(BaseModel):
+    request_id: str
+    sender_wallet_id: str
+    sender_username: str
+    recipient_id: str
+    recipient_username: str
+    amount: float
+    status: str
+    description: str = ""
+    created_at: str = None
+
+class ApprovalAction(BaseModel):
+    request_id: str
+    action: str

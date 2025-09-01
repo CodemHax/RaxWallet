@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 
 from config import Config
-from core.database.user_db import GetUserByUsername
+from core.database.transaction_db import GetUserByUsername
 from core.models.models import UserInDB
 
 oauth2= OAuth2PasswordBearer(tokenUrl="/auth/login")

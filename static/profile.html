@@ -1,86 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile - SyWallet</title>
-  <link rel="stylesheet" href="/static/styles.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    .profile-wrapper{padding-top:120px;padding-bottom:80px;min-height:100vh;background:#f8fafc}
-    .profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem;}
-    .profile-card{background:#fff;padding:2rem;border-radius:20px;box-shadow:0 6px 20px rgba(0,0,0,.08);border:1px solid #f1f5f9;position:relative}
-    .profile-card h3{margin:0 0 1.25rem;font-size:1.25rem;font-weight:600;color:#1e293b}
-    .profile-row{display:flex;justify-content:space-between;margin-bottom:12px;gap:1rem;font-size:.95rem}
-    .profile-row span.label{color:#64748b;font-weight:500}
-    .badge-wallet{display:inline-flex;align-items:center;font-size:.75rem;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:4px 10px;border-radius:14px;font-weight:500;letter-spacing:.5px}
-    .wallet-id-copy{cursor:pointer;font-size:.7rem;margin-left:6px;opacity:.8}
-    .wallet-id-copy:hover{opacity:1}
-    .profile-balance{font-size:2.2rem;font-weight:700;color:#1e293b;margin:4px 0}
-    .muted{color:#64748b;font-size:.8rem}
-    .actions-inline{margin-top:1.2rem;display:flex;gap:.75rem;flex-wrap:wrap}
-    .actions-inline .btn-small{font-size:.75rem;padding:8px 14px}
-    .avatar-circle{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;font-weight:600;box-shadow:0 6px 20px rgba(102,126,234,.4);margin-bottom:1.2rem}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - RaxWallet</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar" id="navbar">
-  <div class="nav-container">
-    <div class="nav-brand"><i class="fas fa-wallet"></i><span>SyWallet</span></div>
-    <div class="nav-menu" id="nav-menu">
-      <a href="/" class="nav-link">Home</a>
-      <a href="/features" class="nav-link">Features</a>
-      <a href="/dashboard" class="nav-link dashboard-link" style="display:none;">Dashboard</a>
-      <a href="/profile" class="nav-link profile-link active" style="display:none;">Profile</a>
-      <div class="auth-buttons" id="auth-buttons" style="display:none;">
-        <a class="btn btn-outline" href="login.html">Login</a>
-        <a class="btn btn-primary" href="register.html">Sign Up</a>
-      </div>
-      <div class="user-menu" id="user-menu" style="display:none;">
-        <span class="user-name" id="user-name"></span>
-        <button class="btn btn-outline" id="logoutBtn">Logout</button>
-      </div>
-    </div>
-    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-  </div>
-</nav>
-
-<section class="profile-wrapper">
-  <div class="container">
-    <div style="text-align:center;margin-bottom:3rem;">
-      <div class="avatar-circle" id="profile-avatar">U</div>
-      <h1 id="profile-fullname" style="margin:0;font-size:2.1rem;font-weight:700;color:#1e293b;">Profile</h1>
-      <p class="muted" id="profile-username"></p>
-    </div>
-    <div class="profile-grid">
-      <div class="profile-card">
-        <h3>Account Details</h3>
-        <div class="profile-row"><span class="label">Full Name</span><span id="pf-full_name">-</span></div>
-        <div class="profile-row"><span class="label">Email</span><span id="pf-email">-</span></div>
-        <div class="profile-row"><span class="label">Phone</span><span id="pf-phone">-</span></div>
-        <div class="profile-row"><span class="label">Username</span><span id="pf-username">-</span></div>
-        <div class="profile-row"><span class="label">Wallet ID</span><span><span id="pf-wallet">-</span><i class="fas fa-copy wallet-id-copy" id="copyWallet" title="Copy"></i></span></div>
-        <div class="actions-inline">
-          <a href="dashboard.html" class="btn btn-outline btn-small">Go to Dashboard</a>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                RaxWallet
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/features" class="nav-link">Features</a>
+                <a href="/dashboard" class="nav-link dashboard-link">Dashboard</a>
+                <a href="/profile" class="nav-link profile-link">Profile</a>
+            </div>
+            <div class="nav-buttons">
+                <div class="auth-buttons" id="auth-buttons">
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="user-menu" id="user-menu">
+                    <span class="user-name" id="user-name">User</span>
+                    <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-      </div>
-      <div class="profile-card">
-        <h3>Wallet Overview</h3>
-        <div class="badge-wallet">WALLET</div>
-        <div class="profile-balance" id="pf-balance">$0.00</div>
-        <div class="muted">Current available balance</div>
-        <div class="actions-inline" style="margin-top:1.5rem;">
-          <a href="dashboard.html" class="btn btn-primary btn-small">Add Funds</a>
-          <a href="dashboard.html" class="btn btn-outline btn-small">Send Money</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </nav>
 
-<div class="toast" id="toast"></div>
-<div class="loading" id="loading" style="display:none;"><div class="spinner"></div></div>
-<script src="/static/script.js"></script>
+    <main class="main-content">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profile-avatar">U</div>
+                <div class="profile-info">
+                    <h1 id="profile-fullname">Loading...</h1>
+                    <p id="profile-username">@username</p>
+                </div>
+            </div>
+
+            <div class="profile-sections">
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h3>Personal Information</h3>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Full Name</span>
+                            <span class="detail-value" id="pf-full_name">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Username</span>
+                            <span class="detail-value" id="pf-username">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value" id="pf-email">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value" id="pf-phone">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h3>Wallet Information</h3>
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Wallet ID</span>
+                            <div class="detail-value-with-action">
+                                <span class="detail-value" id="pf-wallet">-</span>
+                                <button class="btn btn-outline btn-sm" id="copyWallet">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Current Balance</span>
+                            <span class="detail-value balance-amount" id="pf-balance">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h3>Account Actions</h3>
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="profile-actions">
+                        <a href="/dashboard" class="btn btn-primary">
+                            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                        </a>
+                        <a href="/qr-generator" class="btn btn-outline">
+                            <i class="fas fa-qrcode"></i> Generate QR Code
+                        </a>
+                        <button class="btn btn-secondary" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/script.js"></script>
 </body>
 </html>

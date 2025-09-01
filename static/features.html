@@ -1,99 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Features - SyWallet</title>
-  <link rel="stylesheet" href="/static/styles.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    .feature-hero{padding:140px 0 60px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center}
-    .feature-hero h1{font-size:3rem;margin-bottom:16px}
-    .feature-hero p{max-width:760px;margin:0 auto;font-size:1.1rem;opacity:.9}
-    .alt-band{background:#0f172a;color:#fff;padding:60px 0;margin-top:80px}
-    .alt-band h2{font-size:2.2rem;margin-bottom:20px;text-align:center}
-    .cta-box{margin-top:50px;text-align:center}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - RaxWallet</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar" id="navbar">
-  <div class="nav-container">
-    <div class="nav-brand"><i class="fas fa-wallet"></i><span>SyWallet</span></div>
-    <div class="nav-menu" id="nav-menu">
-      <a href="/" class="nav-link">Home</a>
-      <a href="/features" class="nav-link active">Features</a>
-      <a href="/dashboard" class="nav-link dashboard-link" style="display:none;">Dashboard</a>
-      <a href="/profile" class="nav-link profile-link" style="display:none;">Profile</a>
-      <div class="auth-buttons" id="auth-buttons">
-        <a class="btn btn-outline" href="/login">Login</a>
-        <a class="btn btn-primary" href="/register">Sign Up</a>
-      </div>
-      <div class="user-menu" id="user-menu" style="display:none;">
-        <span class="user-name" id="user-name"></span>
-        <button class="btn btn-outline" id="logoutBtn">Logout</button>
-      </div>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                RaxWallet
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/features" class="nav-link">Features</a>
+                <a href="/dashboard" class="nav-link dashboard-link">Dashboard</a>
+                <a href="/profile" class="nav-link profile-link">Profile</a>
+            </div>
+            <div class="nav-buttons">
+                <div class="auth-buttons" id="auth-buttons">
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="user-menu" id="user-menu">
+                    <span class="user-name" id="user-name">User</span>
+                    <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="features-container">
+            <div class="features-header">
+                <h1>Powerful Features for Modern Banking</h1>
+                <p>Discover everything RaxWallet has to offer for your financial needs</p>
+            </div>
+
+            <div class="features-showcase">
+                <div class="feature-detailed">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Bank-Level Security</h3>
+                        <p>Your money and data are protected with advanced encryption, multi-factor authentication, and secure servers that meet the highest industry standards.</p>
+                        <ul>
+                            <li>256-bit SSL encryption</li>
+                            <li>Two-factor authentication</li>
+                            <li>Fraud monitoring</li>
+                            <li>Secure data storage</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-detailed">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Lightning Fast Transfers</h3>
+                        <p>Send and receive money instantly with our optimized payment network. No more waiting days for transfers to complete.</p>
+                        <ul>
+                            <li>Instant transfers</li>
+                            <li>Real-time notifications</li>
+                            <li>24/7 availability</li>
+                            <li>Low transaction fees</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-detailed">
+                    <div class="feature-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>QR Code Payments</h3>
+                        <p>Make payments as simple as scanning a code. Generate QR codes for payment requests or scan to pay others instantly.</p>
+                        <ul>
+                            <li>Generate payment QR codes</li>
+                            <li>Scan to pay instantly</li>
+                            <li>Secure payment links</li>
+                            <li>Payment tracking</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-detailed">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Mobile Optimized</h3>
+                        <p>Access your wallet from anywhere with our responsive design that works perfectly on all devices.</p>
+                        <ul>
+                            <li>Responsive design</li>
+                            <li>Mobile-first approach</li>
+                            <li>Touch-friendly interface</li>
+                            <li>Offline capabilities</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-detailed">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Transaction Analytics</h3>
+                        <p>Keep track of your spending with detailed transaction history and insights into your financial habits.</p>
+                        <ul>
+                            <li>Detailed transaction history</li>
+                            <li>Spending analytics</li>
+                            <li>Export capabilities</li>
+                            <li>Monthly reports</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-detailed">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>24/7 Support</h3>
+                        <p>Get help whenever you need it with our round-the-clock customer support team ready to assist you.</p>
+                        <ul>
+                            <li>24/7 live chat</li>
+                            <li>Email support</li>
+                            <li>Comprehensive FAQ</li>
+                            <li>Video tutorials</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h2>Ready to Get Started?</h2>
+                <p>Join thousands of users who trust RaxWallet with their money</p>
+                <div class="cta-buttons">
+                    <a href="/register" class="btn btn-primary">Create Account</a>
+                    <a href="/login" class="btn btn-outline">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
     </div>
-    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-  </div>
-</nav>
 
-<section class="feature-hero">
-  <div class="container">
-    <h1>Powerful Features</h1>
-    <p>Everything you need to manage digital funds securely, intelligently, and effortlessly.</p>
-  </div>
-</section>
+    <div class="toast" id="toast"></div>
 
-<section class="features" style="padding-top:40px;">
-  <div class="container">
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-lock"></i></div>
-        <h3>Advanced Encryption</h3>
-        <p>All sensitive operations use robust hashing and JWT-based secure sessions.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
-        <h3>Real-Time Balance</h3>
-        <p>Dashboard auto-refresh keeps your displayed balance always up to date.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-user-shield"></i></div>
-        <h3>Rate Limiting</h3>
-        <p>Built-in throttling protects against brute force and abuse scenarios.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-cloud"></i></div>
-        <h3>API First</h3>
-        <p>Clean FastAPI backend lets you integrate mobile or external services fast.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
-        <h3>Insights Ready</h3>
-        <p>Extendable design prepared for analytics & categorization modules.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-plug"></i></div>
-        <h3>Modular Codebase</h3>
-        <p>Clearly separated routes, models, utilities, and static UI assets.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="alt-band">
-  <div class="container">
-    <h2>Built For Developers & End Users</h2>
-    <p style="max-width:760px;margin:0 auto;opacity:.85;line-height:1.6;">SyWallet blends a production-capable FastAPI backend with a clean front-end architecture. Extend endpoints, plug in databases, or integrate third-party payment rails without rewriting the foundation.</p>
-    <div class="cta-box">
-      <a href="/register" class="btn btn-primary btn-large">Create Your Wallet</a>
-    </div>
-  </div>
-</section>
-
-<div class="toast" id="toast"></div>
-<div class="loading" id="loading" style="display:none;"><div class="spinner"></div></div>
-<script src="/static/script.js"></script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

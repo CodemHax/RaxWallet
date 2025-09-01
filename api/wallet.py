@@ -1,17 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException ,Request
 from typing import Annotated
+from fastapi import APIRouter, Depends, HTTPException, Request
 from starlette.responses import JSONResponse
+from core.database.transaction_db import GetUserByWalletId, addTransaction, transactionHistory, UpdateUserBalanceByWalletId, GetUserDocByWalletId
 from core.models.models import UserInDB
 from utlis.getCurrUser import getUser
-from core.database.user_db import GetUserByWalletId, addTransaction, transactionHistory, UpdateUserBalanceByWalletId, GetUserDocByWalletId
-from utlis.walletex import WalletEx
 from utlis.limiter import limiter
-
-
-
+from utlis.walletex import WalletEx
 
 wallet_router = APIRouter(prefix="/wallet", tags=["wallet"])
-walletex = WalletEx()
+ext = WalletEx()
 
 
 @wallet_router.get("/balance")
@@ -112,3 +109,5 @@ async def get_profile(request: Request, curr: Annotated[UserInDB, Depends(getUse
         "recent_transactions": txs[:10]
     }
     return JSONResponse({"profile": profile_data}, status_code=200)
+
+
