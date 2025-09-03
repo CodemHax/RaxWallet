@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Request, HTTPException
 from starlette.responses import JSONResponse
-from utlis.jwt_gen import create_access_token
+from core.utlis.jwt_gen import create_access_token
 from core.database.user_db import RegisterUser, LoginUser
 from core.models.models import RegisterManager, LoginManager, Token
-from utlis.security import hash_password, validatePass, check_password
-from utlis.limiter import limiter
+from core.utlis.security import hash_password, check_password
+from core.utlis.validation import validatePass
+from core.utlis.limiter import limiter
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

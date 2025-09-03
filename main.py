@@ -1,21 +1,24 @@
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from api.auth import router as auth_router
+from api.payments import pay_router
 from api.users import user_router
 from api.wallet import wallet_router
-from api.payments import pay_router
 from core.database.db import initDB, get_client
-from contextlib import asynccontextmanager
-from slowapi.errors import RateLimitExceeded
-from slowapi import _rate_limit_exceeded_handler
-from utlis.limiter import limiter
+from core.database.user_db import create_indexes
+from core.utlis.limiter import limiter
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await initDB()
+    await create_indexes()
     yield
     client = get_client()
     if client is not None:
@@ -37,6 +40,7 @@ app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(wallet_router)
 app.include_router(pay_router)
+
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -73,6 +77,10 @@ async def payment_confirmation_page():
 async def qr_payment_generator_page():
     return FileResponse("static/qr-payment-generator.html")
 
+@app.get("/payment-received")
+async def payment_received_page():
+    return FileResponse("static/payment-received.html")
+
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="localhost", port=8000, reload=True)

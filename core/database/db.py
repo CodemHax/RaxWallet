@@ -11,12 +11,10 @@ async def initDB():
         Config.validate()
         client = AsyncIOMotorClient(Config.mongo_uri, )
         db = client[Config.mongo_db]
-        await db.users.create_index("email", unique=True)
-        await db.users.create_index("username", unique=True)
-        await db.users.create_index("phoneNumber", unique=True)
         return db
     except:
-        raise
+          raise Exception("Database connection error.")
+
 
 
 def get_db():
@@ -27,3 +25,4 @@ def get_db():
 
 def get_client():
     return client
+

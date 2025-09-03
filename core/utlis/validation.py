@@ -1,17 +1,28 @@
-from passlib.context import CryptContext
-
-password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-async def hash_password(password: str) -> str:
-    return password_context.hash(password)
-
-
-async def check_password(plain_password: str, hashed_password: str) -> bool:
+def validate_amount(amount) -> tuple[bool, dict]:
     try:
-        return password_context.verify(plain_password, hashed_password)
-    except Exception:
-        return False
+        amount = float(amount)
+        if amount <= 0:
+            return False, {"reason": "amount", "message": "Amount must be greater than zero."}
+        elif amount > 1000000:
+            return False, {"reason": "amount", "message": "Amount must be less than 1 million."}
+        elif amount % 1 != 0:
+            return False, {"reason": "amount", "message": "Amount must be a whole number."}
+        else:
+           return True, {"reason": "amount", "message": "Amount is valid."}
+    except ValueError:
+        return False, {"reason": "amount", "message": "Invalid amount."}
+
+def validate_request_id(req_id: str) -> str:
+    if not req_id or not req_id.strip():
+        raise ValueError("Request ID is required")
+    return req_id
+
+
+def validate_wallet_id(wallet_id: str) -> str:
+    if not wallet_id or not wallet_id.strip():
+        raise ValueError("Wallet ID is required")
+    return wallet_id
+
 
 
 async def validatePass(password):

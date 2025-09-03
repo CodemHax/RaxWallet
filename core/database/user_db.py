@@ -2,7 +2,7 @@ from typing import Optional
 from pymongo.errors import DuplicateKeyError
 from core.database.db import get_db
 from core.models.models import UserInDB
-from utlis.walletex import WalletEx
+from core.utlis.walletex import WalletEx
 
 
 async def LoginUser(username: str) -> Optional[UserInDB]:
@@ -12,6 +12,7 @@ async def LoginUser(username: str) -> Optional[UserInDB]:
         user_doc["_id"] = str(user_doc["_id"])
         return UserInDB(**user_doc)
     return None
+
 
 async def RegisterUser(phoneNumber: str, username: str, hashed_password: str, email: str, full_name: str) -> bool | str:
     db = get_db()
@@ -44,3 +45,40 @@ async def RegisterUser(phoneNumber: str, username: str, hashed_password: str, em
             return "duplicate"
 
 
+async def create_indexes():
+    try:
+        db = get_db()
+        await db.users.create_index("email", unique=True)
+        await db.users.create_index("username", unique=True)
+        await db.users.create_index("phoneNumber", unique=True)
+        await db.users.create_index("wallet_id", unique=True)
+        print("Database indexes created successfully")
+    except Exception as e:
+        print(f"Error creating indexes: {e}")
+
+
+async def GetUserById(user_id: str) -> Optional[UserInDB]:
+    db = get_db()
+    try:
+        from bson import ObjectId
+        user_doc = await db.users.find_one({"_id": ObjectId(user_id)})
+        if user_doc:
+            user_doc["_id"] = str(user_doc["_id"])
+            return UserInDB(**user_doc)
+    except Exception:
+        pass
+    return None
+
+
+async def UpdateUserProfile(user_id: str, update_data: dict) -> bool:
+    db = get_db()
+    try:
+        from bson import ObjectId
+        result = await db.users.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": update_data},
+            upsert=True
+        )
+        return result.modified_count > 0 or result.upserted_id is not None
+    except Exception:
+        return False

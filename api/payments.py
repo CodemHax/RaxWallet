@@ -8,12 +8,14 @@ from core.database.reqs_db import findTransactionRequests, updateTransactionRequ
 from core.database.transaction_db import GetUserByWalletId, UpdateUserBalanceByWalletId, addTransaction
 from core.models.models import UserInDB, QRPaymentRequest, QRPaymentResponse, PaymentConfirmationData, PaymentAction
 from datetime import datetime, timedelta, timezone
-from utlis.getCurrUser import getUser
+from core.utlis.getCurrUser import getUser
+from core.utlis.limiter import limiter
 
 pay_router = APIRouter(prefix="/payments", tags=["payments"])
 
 
 @pay_router.post("/create_qr_request")
+@limiter.limit("10/minute")
 async def createQRPaymentRequest(request: Request, qr_request: QRPaymentRequest,
                                  curr: Annotated[UserInDB, Depends(getUser)]):
     if qr_request.amount <= 0:
@@ -193,6 +195,60 @@ async def getRequestStatus(request_id: str):
         "sender_name": req.get("sender_username", ""),
         "created_at": req.get("created_at")
     })
+
+
+@pay_router.get("/my-requests")
+async def getMyRequests(curr: Annotated[UserInDB, Depends(getUser)]):
+    try:
+        from core.database.reqs_db import getRequests
+        requests = await getRequests(curr.wallet_id)
+        return JSONResponse({
+            "status": "success",
+            "requests": requests
+        })
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load requests: {str(e)}")
+
+
+@pay_router.post("/expire_request/{request_id}")
+async def expirePaymentRequest(request_id: str, curr: Annotated[UserInDB, Depends(getUser)]):
+    if not request_id:
+        raise HTTPException(status_code=400, detail="Missing request_id")
+
+    req = await findTransactionRequests(request_id=request_id, wallet_id="")
+    if req is None:
+        raise HTTPException(status_code=404, detail="Payment request not found")
+
+
+    if req.get("status") != "pending":
+        return JSONResponse({
+            "status": "info",
+            "message": f"Payment request is already {req.get('status')}",
+            "current_status": req.get("status")
+        })
+
+    if req.get("recipient_id") != curr.wallet_id:
+        raise HTTPException(status_code=403, detail="You can only expire your own payment requests")
+
+    try:
+        success = await updateTransactionRequest(
+            request_id=request_id,
+            wallet_id=req["recipient_id"],
+            status="expired"
+        )
+
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to expire payment request")
+
+        return JSONResponse({
+            "status": "success",
+            "message": "Payment request expired successfully",
+            "request_id": request_id,
+            "new_status": "expired"
+        })
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to expire payment request: {str(e)}")
 
 
 @pay_router.delete("/cancel_request/{request_id}")

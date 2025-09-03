@@ -3,9 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from starlette.responses import JSONResponse
 from core.database.transaction_db import GetUserByWalletId, addTransaction, transactionHistory, UpdateUserBalanceByWalletId, GetUserDocByWalletId
 from core.models.models import UserInDB
-from utlis.getCurrUser import getUser
-from utlis.limiter import limiter
-from utlis.walletex import WalletEx
+from core.utlis.getCurrUser import getUser
+from core.utlis.limiter import limiter
+from core.utlis.walletex import WalletEx
 
 wallet_router = APIRouter(prefix="/wallet", tags=["wallet"])
 ext = WalletEx()

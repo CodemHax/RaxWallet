@@ -62,13 +62,23 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, Q
   - [x] Balance validation & error handling
 
 #### **September 1, 2025**
-- [x] **Payment System & QR Payments**
+- [x] **Payment System & QR Payments (Core)**
   - [x] QR payment request creation (`/payments/create_qr_request`)
   - [x] QR code generation endpoint (`/payments/qr_code/{request_id}`)
   - [x] QR payment scanning handling (`/payments/scan`)
-  - [x] Payment confirmation data retrieval
-  - [x] Payment processing with transaction validation
+  - [x] Payment confirmation data retrieval (`/payments/confirmation_data/{request_id}`)
+  - [x] Payment processing foundation (request lifecycle, validation)
   - [x] Expirable payment requests with UUID generation
+
+#### **September 3, 2025**
+- [x] **Payment Request Management Enhancements**
+  - [x] Accept / Reject payment request (`POST /payments/process_action`)
+  - [x] Payment request status lookup (`GET /payments/request_status/{request_id}`)
+  - [x] List my incoming/outgoing requests (`GET /payments/my-requests`)
+  - [x] Manually expire pending request (`POST /payments/expire_request/{request_id}`)
+  - [x] Cancel own pending request (`DELETE /payments/cancel_request/{request_id}`)
+  - [x] Status transitions added: pending → (completed | rejected | cancelled | expired | failed)
+  - [x] Atomic balance updates with transaction logging for accepted requests
 
 -
 ### 📝 Planned Features
@@ -138,7 +148,7 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, Q
 
 3. **Install dependencies**
    ```bash
-   pip install -r requirements
+   pip install -r requirements.txt
    ```
 
 4. **Environment Configuration**
@@ -174,15 +184,30 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, Q
 ### Payment System
 - `POST /payments/create_qr_request` - Create QR payment request
 - `GET /payments/qr_code/{request_id}` - Generate QR code for payment
-- `GET /payments/scan` - Handle QR code scanning
-- `GET /payments/confirmation_data/{request_id}` - Get payment confirmation data
+- `GET /payments/scan` - Handle QR code scanning (redirects to confirmation UI)
+- `GET /payments/confirmation_data/{request_id}` - Get payment confirmation data before approving
+- `POST /payments/process_action` - Accept or reject a pending request
+- `GET /payments/request_status/{request_id}` - Get current status for a payment request
+- `GET /payments/my-requests` - List all requests related to the authenticated wallet
+- `POST /payments/expire_request/{request_id}` - Manually expire own pending request
+- `DELETE /payments/cancel_request/{request_id}` - Cancel own pending request (originator)
+
+Status lifecycle: pending → (completed | rejected | cancelled | expired | failed)
 
 ### Rate Limits
 - Authentication endpoints: 5 requests per minute per IP
 - Wallet balance/transactions: 10 requests per minute per IP
 - Mutating wallet operations (add, withdraw, send): 5 requests per minute per IP
+- Create QR payment requests: 10 requests per minute per IP
 
 ## 📊 Daily Development Log
+
+### September 3, 2025
+**Enhancements:**
+- Added full payment request management lifecycle (accept / reject / cancel / expire)
+- Added request status retrieval + user-centric listing endpoint
+- Implemented safe status transitions with failure handling
+- Ensured atomic balance updates and transaction logging on acceptance
 
 ### September 1, 2025
 **Current Status:**
@@ -209,7 +234,7 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, Q
 
 ### August 26, 2025
 **Implemented:**
-- Fixed critical bug in rate limiter exception handler
+- Fixed a critical bug in the rate limiter exception handler
 - Resolved AttributeError by moving limiter to `app.state.limiter`
 - Improved error handling for rate limit exceeded scenarios
 
@@ -219,7 +244,7 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, Q
 
 ### Current System Capabilities
 - Complete digital wallet functionality
-- QR-based payment system
+- QR-based payment system with managed request lifecycle
 - Transaction history tracking
 - User authentication and authorization
 - Rate limiting for API protection
@@ -235,10 +260,10 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, Q
 - JWT tokens for stateless authentication
 - Rate limiting prevents abuse
 - Input validation on all endpoints
-- Secure QR payment request handling
+- Secure QR payment request handling with controlled state transitions
 
 ---
 
-**Last Updated**: September 1, 2025
-**Version**: 0.6.0
-**Status**: In Active Devlopment
+**Last Updated**: September 3, 2025
+**Version**: 0.7.0
+**Status**: In Active Development

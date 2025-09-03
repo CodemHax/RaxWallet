@@ -62,6 +62,9 @@ function setupEventListeners() {
   const downloadQRBtn = document.getElementById('downloadQR');
   if (downloadQRBtn) downloadQRBtn.addEventListener('click', downloadQRCode);
 
+  const cancelRequestBtn = document.getElementById('cancelRequest');
+  if (cancelRequestBtn) cancelRequestBtn.addEventListener('click', cancelPaymentRequest);
+
   const qaAddFunds = document.getElementById('qaAddFunds');
   const qaWithdraw = document.getElementById('qaWithdraw');
   const qaSendMoney = document.getElementById('qaSendMoney');
@@ -730,12 +733,12 @@ function showPaymentError(message) {
   if (errorState) errorState.style.display = 'block';
 }
 
-// Initialize payment approval when DOM is loaded
+
 document.addEventListener('DOMContentLoaded', () => {
   initializePaymentApproval();
 });
 
-// QR Generator Functions - Using Backend API
+
 async function handleQRGeneration(e) {
   e.preventDefault();
 
@@ -791,6 +794,7 @@ async function handleQRGeneration(e) {
 }
 
 let statusPollingInterval = null;
+let paymentTimeoutId = null;
 
 function displayQRResult(qrData, description, expires_in_minutes) {
   const qrResult = document.getElementById('qrResult');
@@ -819,7 +823,62 @@ function displayQRResult(qrData, description, expires_in_minutes) {
   document.getElementById('qrForm').style.display = 'none';
   qrResult.style.display = 'block';
 
+  setupQRActionButtons();
+
   startStatusPolling(qrData.request_id);
+}
+
+function setupQRActionButtons() {
+  const downloadBtn = document.getElementById('downloadQR');
+  const shareBtn = document.getElementById('shareQR');
+  const cancelBtn = document.getElementById('cancelRequest');
+  const generateNewBtn = document.getElementById('generateNew');
+
+  console.log('📋 Button elements found:', {
+    download: !!downloadBtn,
+    share: !!shareBtn,
+    cancel: !!cancelBtn,
+    generateNew: !!generateNewBtn
+  });
+
+  if (downloadBtn) {
+    downloadBtn.onclick = function(e) {
+      e.preventDefault();
+      downloadQRCode();
+    };
+  }
+
+  if (shareBtn) {
+    shareBtn.onclick = function(e) {
+      e.preventDefault();
+      shareQRCode();
+    };
+
+  }
+
+  if (cancelBtn) {
+    cancelBtn.onclick = function(e) {
+      e.preventDefault();
+      cancelPaymentRequest();
+    };
+  }
+
+  if (generateNewBtn) {
+    generateNewBtn.onclick = function(e) {
+      e.preventDefault();
+      resetQRForm();
+    };
+  }
+
+
+  const allButtons = [downloadBtn, shareBtn, cancelBtn, generateNewBtn];
+  allButtons.forEach((btn) => {
+    if (btn) {
+      btn.style.cursor = 'pointer';
+      btn.style.pointerEvents = 'auto';
+    }
+  });
+
 }
 
 function updatePaymentStatus(status, message, senderName = null) {
@@ -862,6 +921,8 @@ function getStatusDisplayText(status) {
       return 'Rejected';
     case 'cancelled':
       return 'Cancelled';
+    case 'expired':
+      return 'Expired';
     default:
       return 'Unknown';
   }
@@ -871,6 +932,33 @@ function startStatusPolling(requestId) {
   if (statusPollingInterval) {
     clearInterval(statusPollingInterval);
   }
+
+  if (paymentTimeoutId) {
+    clearTimeout(paymentTimeoutId);
+  }
+
+  // Set up 3-minute (180 seconds) timeout to automatically expire the transaction
+  paymentTimeoutId = setTimeout(async () => {
+    if (statusPollingInterval) {
+      clearInterval(statusPollingInterval);
+      statusPollingInterval = null;
+    }
+
+    // Automatically expire the transaction after 3 minutes
+    try {
+      await fetch(`${API_BASE_URL}/payments/expire_request/${requestId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+    } catch (error) {
+      console.error('Error expiring transaction:', error);
+    }
+
+    updatePaymentStatus('expired', 'Payment request expired after 3 minutes.');
+    showToast('Payment request expired due to timeout', 'warning');
+  }, 180000); // 3 minutes = 180,000 milliseconds
 
   statusPollingInterval = setInterval(async () => {
     try {
@@ -888,6 +976,12 @@ function startStatusPolling(requestId) {
           clearInterval(statusPollingInterval);
           statusPollingInterval = null;
 
+          // Clear the timeout since transaction completed
+          if (paymentTimeoutId) {
+            clearTimeout(paymentTimeoutId);
+            paymentTimeoutId = null;
+          }
+
           if (currentStatus === 'completed') {
             updatePaymentStatus('completed', 'Payment completed successfully!', statusData.sender_name);
             showToast('Payment received successfully!', 'success');
@@ -895,6 +989,16 @@ function startStatusPolling(requestId) {
             if (typeof loadWalletBalance === 'function') {
               loadWalletBalance();
             }
+
+
+            setTimeout(() => {
+              const amount = window.currentQRData.amount;
+              const sender = encodeURIComponent(statusData.sender_name || 'Unknown');
+              const txId = window.currentQRData.request_id;
+              const description = encodeURIComponent(window.currentQRData.description || '');
+
+              window.location.href = `/payment-received?amount=${amount}&sender=${sender}&tx_id=${txId}&description=${description}`;
+            }, 2000);
           } else if (currentStatus === 'rejected') {
             updatePaymentStatus('rejected', 'Payment was declined by the sender.');
             showToast('Payment request was declined', 'error');
@@ -904,6 +1008,9 @@ function startStatusPolling(requestId) {
           } else if (currentStatus === 'cancelled') {
             updatePaymentStatus('cancelled', 'Payment request was cancelled.');
             showToast('Payment request cancelled', 'warning');
+          } else if (currentStatus === 'expired') {
+            updatePaymentStatus('expired', 'Payment request has expired.');
+            showToast('Payment request expired', 'warning');
           }
         }
       }
@@ -920,6 +1027,11 @@ function resetQRForm() {
   if (statusPollingInterval) {
     clearInterval(statusPollingInterval);
     statusPollingInterval = null;
+  }
+
+  if (paymentTimeoutId) {
+    clearTimeout(paymentTimeoutId);
+    paymentTimeoutId = null;
   }
 
   if (qrResult) qrResult.style.display = 'none';
@@ -1204,7 +1316,7 @@ function displayMyRequests(requests) {
   });
 }
 
-// Password visibility toggle functionality
+
 function initializePasswordToggle() {
   const passwordToggle = document.getElementById('password-toggle');
   const passwordInput = document.getElementById('password');
@@ -1222,7 +1334,7 @@ function initializePasswordToggle() {
   }
 }
 
-// Remember me functionality
+
 function initializeRememberMe() {
   const usernameInput = document.getElementById('username');
   const rememberCheckbox = document.getElementById('remember-me');
@@ -1236,7 +1348,7 @@ function initializeRememberMe() {
   }
 }
 
-// Real-time validation
+
 function initializeRealTimeValidation() {
   const usernameInput = document.getElementById('username');
   const passwordInput = document.getElementById('password');
@@ -1353,4 +1465,73 @@ function clearValidationStates() {
       feedback.className = 'input-feedback';
     }
   });
+}
+
+async function cancelPaymentRequest() {
+  if (!window.currentQRData || !window.currentQRData.request_id) {
+    showToast('No active payment request to cancel', 'error');
+    return;
+  }
+
+  if (!authToken) {
+    showToast('Please login to cancel payment requests', 'error');
+    return;
+  }
+
+
+  if (!confirm('Are you sure you want to cancel this payment request?')) {
+    return;
+  }
+
+  const cancelBtn = document.getElementById('cancelRequest');
+  if (cancelBtn) {
+    cancelBtn.disabled = true;
+    cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/payments/cancel_request/${window.currentQRData.request_id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Failed to cancel payment request');
+    }
+
+
+    if (statusPollingInterval) {
+      clearInterval(statusPollingInterval);
+      statusPollingInterval = null;
+    }
+
+    if (paymentTimeoutId) {
+      clearTimeout(paymentTimeoutId);
+      paymentTimeoutId = null;
+    }
+
+    updatePaymentStatus('cancelled', 'Payment request cancelled by user.');
+    showToast('Payment request cancelled successfully', 'success');
+
+
+    const downloadBtn = document.getElementById('downloadQR');
+    const shareBtn = document.getElementById('shareQR');
+    const generateNewBtn = document.getElementById('generateNew');
+
+    if (downloadBtn) downloadBtn.disabled = true;
+    if (shareBtn) shareBtn.disabled = true;
+    if (cancelBtn) cancelBtn.style.display = 'none';
+
+  } catch (error) {
+    console.error('Error cancelling payment request:', error);
+    showToast('Failed to cancel payment request: ' + error.message, 'error');
+
+    if (cancelBtn) {
+      cancelBtn.disabled = false;
+      cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancel Request';
+    }
+  }
 }

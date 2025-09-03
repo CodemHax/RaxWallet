@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Received - RaxWallet</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                RaxWallet
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/features" class="nav-link">Features</a>
+                <a href="/dashboard" class="nav-link dashboard-link">Dashboard</a>
+                <a href="/profile" class="nav-link profile-link">Profile</a>
+            </div>
+            <div class="nav-buttons">
+                <div class="auth-buttons" id="auth-buttons">
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="user-menu" id="user-menu">
+                    <span class="user-name" id="user-name">User</span>
+                    <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="payment-wrapper">
+            <div class="payment-container">
+                <div class="payment-card">
+                    <div class="success-animation">
+                        <div class="checkmark-circle">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="card-header text-center">
+                        <h2 style="color: #10b981;"><i class="fas fa-check-circle"></i> Payment Received!</h2>
+                        <p>Your payment request has been successfully completed</p>
+                    </div>
+
+                    <div class="payment-details">
+                        <div class="detail-row">
+                            <span><strong>Amount Received:</strong></span>
+                            <span class="amount-received" style="color: #10b981; font-weight: 600;">$<span id="receivedAmount">0.00</span></span>
+                        </div>
+                        <div class="detail-row">
+                            <span><strong>From:</strong></span>
+                            <span id="senderName">Unknown</span>
+                        </div>
+                        <div class="detail-row">
+                            <span><strong>Transaction ID:</strong></span>
+                            <span id="transactionId">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span><strong>Date & Time:</strong></span>
+                            <span id="transactionTime">-</span>
+                        </div>
+                        <div class="detail-row" id="descriptionRow" style="display: none;">
+                            <span><strong>Description:</strong></span>
+                            <span id="transactionDescription">-</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-actions">
+                        <button class="btn btn-primary" onclick="window.location.href='/dashboard'">
+                            <i class="fas fa-home"></i> Go to Dashboard
+                        </button>
+                        <button class="btn btn-outline" onclick="window.location.href='/qr-payment-generator'">
+                            <i class="fas fa-qrcode"></i> Generate Another QR
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/script.js"></script>
+    <script>
+        // Initialize payment received page
+        document.addEventListener('DOMContentLoaded', () => {
+            initializePaymentReceived();
+        });
+
+        function initializePaymentReceived() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const amount = urlParams.get('amount');
+            const sender = urlParams.get('sender');
+            const txId = urlParams.get('tx_id');
+            const description = urlParams.get('description');
+
+            if (amount) {
+                document.getElementById('receivedAmount').textContent = parseFloat(amount).toFixed(2);
+            }
+
+            if (sender) {
+                document.getElementById('senderName').textContent = decodeURIComponent(sender);
+            }
+
+            if (txId) {
+                document.getElementById('transactionId').textContent = txId;
+            }
+
+            if (description && description !== 'null' && description !== '') {
+                document.getElementById('transactionDescription').textContent = decodeURIComponent(description);
+                document.getElementById('descriptionRow').style.display = 'flex';
+            }
+
+            // Set current time
+            document.getElementById('transactionTime').textContent = new Date().toLocaleString();
+
+            // Show success animation
+            setTimeout(() => {
+                const checkmark = document.querySelector('.checkmark-circle');
+                if (checkmark) {
+                    checkmark.style.transform = 'scale(1)';
+                    checkmark.style.opacity = '1';
+                }
+            }, 300);
+        }
+    </script>
+
+    <style>
+        .payment-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .payment-container {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .success-animation {
+            margin-bottom: 2rem;
+        }
+
+        .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transform: scale(0);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .checkmark-circle i {
+            color: white;
+            font-size: 2rem;
+        }
+
+        .payment-details {
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .payment-actions .btn {
+            flex: 1;
+        }
+
+        @media (max-width: 640px) {
+            .payment-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

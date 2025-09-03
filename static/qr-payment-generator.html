@@ -68,9 +68,10 @@
                         <div class="form-group">
                             <label for="expires_in_minutes">Expires In</label>
                             <select id="expires_in_minutes" name="expires_in_minutes">
+                                <option value="3" selected>3 Minutes</option>
                                 <option value="15">15 Minutes</option>
                                 <option value="30">30 Minutes</option>
-                                <option value="60" selected>1 Hour</option>
+                                <option value="60">1 Hour</option>
                                 <option value="120">2 Hours</option>
                                 <option value="1440">24 Hours</option>
                             </select>
@@ -109,6 +110,9 @@
                             </button>
                             <button id="shareQR" class="btn btn-outline">
                                 <i class="fas fa-share"></i> Share Link
+                            </button>
+                            <button id="cancelRequest" class="btn btn-danger">
+                                <i class="fas fa-times"></i> Cancel Request
                             </button>
                             <button id="generateNew" class="btn btn-secondary">
                                 <i class="fas fa-plus"></i> Generate New

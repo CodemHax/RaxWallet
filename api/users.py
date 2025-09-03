@@ -2,7 +2,7 @@ from fastapi import APIRouter , Depends
 from typing import Annotated
 
 from core.models.models import UserInDB
-from utlis.getCurrUser import getUser
+from core.utlis.getCurrUser import getUser
 
 user_router = APIRouter(prefix="/users" , tags=["users"])
 
