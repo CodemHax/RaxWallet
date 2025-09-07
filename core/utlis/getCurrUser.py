@@ -8,17 +8,26 @@ from core.models.models import UserInDB
 
 oauth2= OAuth2PasswordBearer(tokenUrl="/auth/login")
 
+invalid =  HTTPException(status_code=401, detail="Invalid token" , headers={"WWW-Authenticate": "Bearer"})
 async def getUser(token: str = Depends(oauth2)) -> UserInDB:
-    error = HTTPException(status_code=401, detail="Invalid token" , headers={"WWW-Authenticate": "Bearer"})
     try:
-        payload = jwt.decode(token, Config.secret_key, algorithms=[Config.ALGORITHM])
+        payload = jwt.decode(
+            token,
+            Config.secret_key,
+            algorithms=[Config.ALGORITHM],
+            audience=Config.AUDIENCE,
+            issuer=Config.ISSUER,
+            options={"require": ["exp", "iat", "nbf", "sub", "typ"]}
+        )
+        if payload.get("typ") != "access":
+            raise invalid
         username = payload.get("sub")
         if username is None:
-            raise error
+            raise invalid
     except JWTError:
-        raise error
+        raise invalid
 
     user = await GetUserByUsername(username=username)
     if user is None:
-        raise error
+        raise invalid
     return user

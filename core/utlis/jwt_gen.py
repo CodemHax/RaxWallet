@@ -1,15 +1,19 @@
 from jose import jwt
 from datetime import datetime, timedelta, timezone
-import config
+from  config import  Config
 
-SECRET_KEY = config.Config.secret_key
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
-def create_access_token(data: dict):
+def create_access_token(data: dict, expires_minutes: int | None = None):
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    minutes = expires_minutes if expires_minutes is not None else Config.ACCESS_TOKEN_EXPIRE_MINUTES
+    now = datetime.now(timezone.utc)
+    expire = now + timedelta(minutes=minutes)
+    to_encode.update({
+        "exp": expire,
+        "iat": now,
+        "nbf": now,
+        "iss": Config.ISSUER,
+        "aud": Config.AUDIENCE,
+        "typ": "access"
+    })
+    encoded_jwt = jwt.encode(to_encode, Config.secret_key, algorithm=Config.ALGORITHM)
     return encoded_jwt

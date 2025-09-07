@@ -65,8 +65,8 @@ async def GetUserById(user_id: str) -> Optional[UserInDB]:
         if user_doc:
             user_doc["_id"] = str(user_doc["_id"])
             return UserInDB(**user_doc)
-    except Exception:
-        pass
+    except Exception as e:
+       print(f"Error getting user by ID: {e}")
     return None
 
 
@@ -80,5 +80,6 @@ async def UpdateUserProfile(user_id: str, update_data: dict) -> bool:
             upsert=True
         )
         return result.modified_count > 0 or result.upserted_id is not None
-    except Exception:
+    except Exception as e:
+        print(f"Error updating user profile: {e}")
         return False

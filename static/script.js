@@ -277,7 +277,8 @@ async function loadTransactions() {
   if (!txList) return;
   try {
     const res = await fetch(`${API_BASE_URL}/wallet/transactions`, { headers: { 'Authorization': `Bearer ${authToken}` } });
-    if (!res.ok) throw new Error('tx fetch failed');
+    if (!res.ok) 
+      throw new Error('tx fetch failed');
     const data = await res.json();
     const txs = data.transactions || [];
     txList.innerHTML = '';
@@ -1286,6 +1287,7 @@ function displayMyRequests(requests) {
   container.innerHTML = '';
 
   requests.forEach(req => {
+    req.created_at = undefined;
     const amount = parseFloat(req.amount);
     const statusColor = req.status === 'pending' ? '#f59e0b' :
                        req.status === 'completed' ? '#10b981' : '#ef4444';

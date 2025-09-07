@@ -50,10 +50,36 @@ async def transactionRequest(req_id: str, recipient_id: str, recipient_username:
               )
           return result.modified_count > 0 or result.upserted_id is not None
       except ValidationError as e:
-          raise
+          raise ValidationError(e)
 
       except Exception as e:
-          raise TransactionRequestedError
+          raise TransactionRequestedError(e)
+
+async def filterTransactionRequests(wallet_id: str, status: str = None, date: str = None) -> list | None:
+    try:
+        db = get_db()
+        if validate_wallet_id(wallet_id) is None:
+            raise ValidationError("Wallet ID is required")
+        query = {"wallet_id": wallet_id}
+        if status is not None and status.strip() != "":
+            query["transaction_requests.status"] = status.lower()
+        if date is not None and date.strip() != "":
+            query["transaction_requests.created_at"] = date
+        user_doc = await db.transactionsreq.find_one(query)
+        if not user_doc or "transaction_requests" not in user_doc:
+            return []
+        requests = user_doc["transaction_requests"]
+        if status:
+            requests = [req for req in requests if req.get("status") == status.lower()]
+        if date:
+            requests = [req for req in requests if req.get("created_at") == date]
+        return requests
+    except ValidationError as e:
+        raise ValidationError(e)
+    except Exception as e:
+        raise TransactionRequestedError(e)
+
+
 
 
 async def findTransactionRequests(request_id: str, wallet_id: str = None) -> dict | None:
@@ -82,10 +108,10 @@ async def findTransactionRequests(request_id: str, wallet_id: str = None) -> dic
 
           return None
       except ValidationError as e:
-          raise
+          raise ValidationError(e)
 
       except Exception as e:
-          raise TransactionRequestedError
+          raise TransactionRequestedError(e)
 
 
 
@@ -131,10 +157,10 @@ async def updateTransactionRequest(request_id: str, wallet_id: str, status: str,
         result = await db.transactionsreq.update_one({"wallet_id": wallet_id , "transaction_requests.request_id": request_id}, {"$set": update_fields}, upsert=True)
         return result.modified_count > 0 or result.upserted_id is not None
     except ValidationError as e:
-        raise
+        raise ValidationError(e)
 
     except Exception as e:
-        raise TransactionRequestedError
+        raise TransactionRequestedError(e)
 
 
 async def createTransaction(wallet_id: str) -> bool:
@@ -153,8 +179,8 @@ async def createTransaction(wallet_id: str) -> bool:
       except DuplicateKeyError:
               return True
       except ValidationError as e:
-          raise
-      except Exception as e:
+          raise ValidationError(e)
+      except Exception:
           raise TransactionRequestedError
 
 
@@ -172,10 +198,9 @@ async def isInDB(wallet_id: str) -> bool:
          return await createTransaction(wallet_id)
 
      except ValidationError as e:
-         raise
-     except Exception as e:
-         raise TransactionRequestedError("Unable to check if wallet is in DB. Please try again later. If the problem persists, please contact support. Error:"
-                                        )
+         raise ValidationError(e)
+     except Exception:
+         raise TransactionRequestedError
 
 
 
@@ -193,11 +218,9 @@ async def getRequests(wallet_id: str , limit: int = 100) -> list:
             return []
         return user_doc["transaction_requests"][:limit]
     except ValidationError as e:
-        raise
-    except Exception as e:
-        raise TransactionRequestedError("Unable to get transaction requests. Please try again later. If the problem persists, please contact support. Error:")
-
-
+        raise ValidationError(e)
+    except Exception :
+        raise TransactionRequestedError
 
 async def deleteTransactionRequest(request_id: str, wallet_id: str) -> bool:
     try:
@@ -224,6 +247,6 @@ async def deleteTransactionRequest(request_id: str, wallet_id: str) -> bool:
         return success
 
     except ValidationError as e:
-        raise
-    except Exception as e:
-        raise TransactionRequestedError("Unable to delete transaction request. Please try again later. If the problem persists, please contact support. Error:")
+        raise ValidationError(e)
+    except Exception:
+        raise TransactionRequestedError

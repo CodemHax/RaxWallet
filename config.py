@@ -7,9 +7,10 @@ class Config:
     mongo_uri = os.getenv("MONGO_URL") or ""
     mongo_db = os.getenv("MONGO_DBNAME") or ""
     secret_key = os.getenv("API_SECRET_KEY") or ""
-    ALGORITHM = os.getenv("ALGORITHM") or ""
-    ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES") or ""
-
+    ALGORITHM = os.getenv("ALGORITHM") or "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES") or "15")
+    ISSUER = "wallet-api"
+    AUDIENCE = "wallet-clients"
     @staticmethod
     def validate():
         missing = []

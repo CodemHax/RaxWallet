@@ -1,11 +1,13 @@
 from fastapi import APIRouter, Request, HTTPException
 from starlette.responses import JSONResponse
+
 from core.utlis.jwt_gen import create_access_token
 from core.database.user_db import RegisterUser, LoginUser
 from core.models.models import RegisterManager, LoginManager, Token
 from core.utlis.security import hash_password, check_password
 from core.utlis.validation import validatePass
 from core.utlis.limiter import limiter
+from config import Config
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -26,7 +28,7 @@ async def login_user(request: Request, login: LoginManager):
         raise invalid_passError
 
     jwt_token = create_access_token({"sub": user.username, "user_id": user.id})
-    return Token(access_token=jwt_token, token_type="bearer" , expires_in=3600)
+    return Token(access_token=jwt_token, token_type="bearer" ,  expires_in=Config.ACCESS_TOKEN_EXPIRE_MINUTES * 60)
 
 
 @router.post("/register")

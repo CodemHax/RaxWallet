@@ -10,7 +10,8 @@ async def hash_password(password: str) -> str:
 async def check_password(plain_password: str, hashed_password: str) -> bool:
     try:
         return password_context.verify(plain_password, hashed_password)
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 

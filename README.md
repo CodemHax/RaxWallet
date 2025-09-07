@@ -112,10 +112,10 @@ A FastAPI-based digital wallet system with user authentication, rate limiting, Q
   - [ ] Session management
   - [ ] Fraud detection algorithms
 
-- [ ] **API Enhancements**
-  - [ ] Comprehensive API documentation with OpenAPI
+- [x] **API Enhancements**
+  - [x] Comprehensive API documentation with OpenAPI
   - [ ] Webhook support for external integrations
-  - [ ] Rate limiting per user/account
+  - [x] Rate limiting per user/account
   - [ ] Advanced filtering and search capabilities
 
 ## 🛠️ Technology Stack
@@ -202,6 +202,15 @@ Status lifecycle: pending → (completed | rejected | cancelled | expired | fail
 
 ## 📊 Daily Development Log
 
+### September 7, 2025
+**Enhancements:**
+- Hardened JWT implementation: added required claims (exp, iat, nbf, sub, typ) and validation of typ == access
+- Introduced issuer (wallet-api) and audience (wallet-clients) claims; decode now enforces iss & aud
+- Added iat/nbf claims for stricter temporal validation
+- Converted ACCESS_TOKEN_EXPIRE_MINUTES to int at config load (prevents timedelta type errors)
+- Added optional expires_minutes override parameter to create_access_token
+- Fixed missing Config import in auth router to prevent NameError on expires_in calculation
+
 ### September 3, 2025
 **Enhancements:**
 - Added full payment request management lifecycle (accept / reject / cancel / expire)
@@ -264,6 +273,6 @@ Status lifecycle: pending → (completed | rejected | cancelled | expired | fail
 
 ---
 
-**Last Updated**: September 3, 2025
-**Version**: 0.7.0
+**Last Updated**: September 7, 2025
+**Version**: 0.7.3
 **Status**: In Active Development
